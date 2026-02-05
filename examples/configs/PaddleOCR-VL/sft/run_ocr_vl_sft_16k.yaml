@@ -1,0 +1,115 @@
+### data
+train_dataset_type: "erniekit"
+eval_dataset_type: "erniekit"
+# JSONL 사용 시:
+# train_dataset_path: "./examples/data/ocr_vl_sft-train_Bengali.jsonl"
+# #train_dataset_path: "./examples/data/text_in_wild_annotations_train.jsonl"
+# train_dataset_prob: "1.0"
+# eval_dataset_path: "./examples/data/ocr_vl_sft-test_Bengali.jsonl"
+# eval_dataset_prob: "1.0"
+# LMDB 사용 시(콤마로 다중 경로/확률 지정 가능):
+train_lmdb_paths: "/mnt/nas/ocr_dataset/ocr_public_train_layout.lmdb"
+train_lmdb_prob: "1.0"
+eval_dataset_path: "/mnt/nas/ocr_dataset/public_admin_train_layout.lmdb"
+eval_dataset_prob: "1.0"
+# 컨텍스트 길이 확장으로 장문/다이미지 샘플 트렁케이션 오류 완화
+max_seq_len: 4096
+num_samples_each_epoch: 6000000
+use_pic_id: False
+sft_replace_ids: True
+sft_image_normalize: True
+sft_image_rescale: True
+image_dtype: "float32"
+
+# # 이미지 토큰 상한을 랜덤 캡으로 제한(변동 해상도에서 토큰 폭증 방지)
+# adaptive_max_imgtoken_option: [64, 96, 128]
+# adaptive_max_imgtoken_rate: [0.6, 0.3, 0.1]
+# ## parser는 문자열 형태("a,b,c")를 기대하므로 아래 문자열 필드로도 함께 지정
+# adaptive_max_imgtoken_option: "64,96,128"
+# adaptive_max_imgtoken_rate: "0.6,0.3,0.1"
+# # 트렁케이션 경계 허용 완화(마스킹 구간이 1개여도 자를 수 있게)
+chat_template: "ernie_vl"
+# # 학습 불가 샘플은 드롭(안전장치)
+# drop_untrainble_sample: True
+
+### model
+model_name_or_path: PaddlePaddle/PaddleOCR-VL
+fine_tuning: LoRA
+fuse_rope: True
+use_sparse_head_and_loss_fn: True
+multimodal: True
+use_flash_attention: True
+
+### finetuning
+# base
+stage: OCR-VL-SFT
+seed: 23
+do_train: True
+do_eval: True
+distributed_dataloader: False
+dataloader_num_workers: 0
+prefetch_factor: 1
+batch_size: 1
+packing_size: 1
+packing: False
+padding: False
+eval_steps: 50000
+evaluation_strategy: steps
+num_train_epochs: 1
+max_steps: 358097
+save_steps: 50000
+save_total_limit: 5
+save_strategy: steps
+logging_steps: 10000
+release_grads: True
+gradient_accumulation_steps: 2
+logging_dir: ./PaddleOCR-VL-SFT-Bengali/tensorboard_logs/
+output_dir: ./PaddleOCR-VL-SFT-Bengali
+disable_tqdm: False
+
+# train
+warmup_steps: 10
+learning_rate: 5.0e-6
+lr_scheduler_type: cosine
+min_lr: 5.0e-7
+layerwise_lr_decay_bound: 1.0
+from_scratch: 0
+
+# optimizer
+weight_decay: 0.1
+adam_epsilon: 1.0e-8
+adam_beta1: 0.9
+adam_beta2: 0.95
+
+# performance
+tensor_parallel_degree: 1
+pipeline_parallel_degree: 1
+sharding_parallel_degree: 1
+sharding: stage1
+sequence_parallel: False
+pipeline_parallel_config: enable_delay_scale_loss enable_release_grads disable_partial_send_recv
+recompute: True
+recompute_granularity: "full"
+recompute_use_reentrant: True
+compute_type: bf16
+fp16_opt_level: O2
+disable_ckpt_quant: True
+#amp_master_grad: True
+amp_custom_white_list:
+  - lookup_table
+  - lookup_table_v2
+  - flash_attn
+  - matmul
+  - matmul_v2
+  - fused_gemm_epilogue
+amp_custom_black_list:
+  - reduce_sum
+  - softmax_with_cross_entropy
+  - c_softmax_with_cross_entropy
+  - elementwise_div
+  - sin
+  - cos
+unified_checkpoint: True
+# unified_checkpoint_config: async_save
+convert_from_hf: True
+save_to_hf: True

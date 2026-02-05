@@ -1,0 +1,82 @@
+.idea
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+output
+demo_data/index-cache
+log
+
+# -----------------------------
+# 공통 캐시/노트북
+# -----------------------------
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# -----------------------------
+# 학습 산출물/로그 (대용량)
+# -----------------------------
+erniekit_dist_log/
+**/tensorboard_logs/
+**/runs/
+wandb/
+
+# 학습 출력 디렉터리(본 프로젝트에서 자주 사용)
+PaddleOCR-VL-SFT-*/
+PaddleOCR-VL-SFT-OCRPUBLIC/
+
+# 일반 체크포인트/로그
+checkpoint-*/
+**/*.log
+**/*.out
+
+# -----------------------------
+# 가중치/체크포인트 (대용량)
+# -----------------------------
+*.pth
+*.ckpt
+*.pt
+*.bin
+*.safetensors
+*.pdparams
+*.pdopt
+*.pdmodel
+
+# -----------------------------
+# 데이터/DB (대용량)
+# -----------------------------
+*.lmdb
+*.lmdb/
+*.mdb
+
+# 로컬 마운트/데이터 경로(예: /mnt/nas/...)를 repo 내부로 심볼릭/복사한 경우 대비
+mnt/
+
+# -----------------------------
+# 이미지/비디오 데이터(데이터셋/크롭 등 대용량 방지)
+# -----------------------------
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.bmp
+*.tif
+*.tiff
+*.gif
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# -----------------------------
+# 파이썬 빌드 산출물
+# -----------------------------
+build/
+dist/
+*.egg-info/
+*.jsonl
+*.jsonl
+*.jsonl
