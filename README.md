@@ -17,12 +17,8 @@
 
 ## 1) (공통) 데이터 준비: merged_json / lookup
 
-아래 단계는 기존 `ocr_test/OCR_PIPELINE/README.md`의 “2) merged_json 만들기”, “3) lookup 만들기”와 동일합니다.
-
 - `merge_json_datasets.py`로 `*_merged.json` 준비
 - `ftp_tree_viewer.py` / `convert_lookup_to_pickle.py`로 `lookup_*.pkl.gz` 준비
-
-실행 위치/상대경로 이슈가 있으므로 **기존 문서 안내대로 `ocr_test/OCR_PIPELINE/FAST`에서 수행**하는 것을 권장합니다.
 
 ---
 
@@ -117,8 +113,4 @@ CUDA_VISIBLE_DEVICES=0 erniekit train examples/configs/PaddleOCR-VL/sft/run_ocr_
 
 ---
 
-## 5) Git ignore 권장(대용량 데이터/산출물/가중치)
-
-이 repo에는 학습 산출물(`output_dir`, 체크포인트, 로그)과 대용량 데이터(LMDB, 이미지, 캐시)가 쉽게 쌓입니다.  
-푸시 전에 `ERNIE/.gitignore`에 관련 패턴을 추가해 커밋에 포함되지 않도록 합니다(아래 `.gitignore`가 포함하도록 이미 반영되어야 합니다).
 
